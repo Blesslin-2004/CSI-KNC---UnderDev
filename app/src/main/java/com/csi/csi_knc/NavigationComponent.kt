@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.csi.csi_knc.screens.Login1Screen
+import com.csi.csi_knc.screens.HomeScreen
 
 @Composable
 fun NavigationComponent() {
@@ -12,5 +13,6 @@ fun NavigationComponent() {
     NavHost(navController = navController, startDestination = Routes.Splash.route) {
         composable(Routes.Splash.route) { SplashScreen(navController) }
         composable(Routes.Login1.route) { Login1Screen() }
+        composable ( Routes.Home.route ) {HomeScreen()}
     }
 }
