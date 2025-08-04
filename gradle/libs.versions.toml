@@ -12,6 +12,7 @@ navigationRuntimeAndroid = "2.9.2"
 navigationComposeJvmstubs = "2.9.2"
 googleGmsGoogleServices = "4.4.3"
 firebaseFirestore = "26.0.0"
+firebaseAuth = "24.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "navigation-compose-jvmstubs", version.ref = "navigationComposeJvmstubs" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

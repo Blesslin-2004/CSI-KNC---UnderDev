@@ -52,9 +52,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation("androidx.compose.material3:material3:1.3.2")
 
-    // ✅ Use this instead of the two incorrect ones
+    implementation ("com.google.firebase:firebase-bom:34.0.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -36,9 +36,12 @@ import com.csi.csi_knc.R
 import com.csi.csi_knc.ui.theme.CSIKNCTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.csi.csi_knc.Routes
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController){
     val featuredItems = listOf(
         Triple("நேரலை", "(Live Meetings)", R.drawable.live_meeting),
         Triple("அறிவிப்புகள்", "(Announcements)", R.drawable.announcements),
@@ -52,11 +55,10 @@ fun HomeScreen() {
     )
 
     val SongItems = listOf(
-        Triple("கீதங்களும் கீர்த்தனைகளும்", "(1000 Praises)", R.drawable.keerthanaigal),
-        Triple("கன்வென்ஷன் கீதங்கள்", "(Prayer Points)", R.drawable.convention)
+        Triple("கீதங்களும் கீர்த்தனைகளும்", "", R.drawable.keerthanaigal),
+        Triple("கன்வென்ஷன் கீதங்கள்", "", R.drawable.convention)
     )
 
-    val scrollState = rememberScrollState()
 
     Box(
             modifier = Modifier.fillMaxSize()
@@ -138,10 +140,11 @@ fun HomeScreen() {
                         FeatureCard(featuredItems[2])
                     }
                 }
+                Spacer(Modifier.height(16.dp))
 
 
-                // Featured Section
-                Text("Featured", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                // Song book Section
+                Text("Song Book", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(Modifier.height(8.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -154,8 +157,12 @@ fun HomeScreen() {
                             .weight(1f),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        SongsCard(Son[1])
-                        SongsCard(featuredItems[2])
+                        SongsCard(SongItems[0]) {
+                            navController.navigate(Routes.Keerthanaigal.route)
+                        }
+                        SongsCard(SongItems[1]) {
+                            navController.navigate(Routes.Convention.route)
+                        }
                     }
                 }
 
@@ -342,14 +349,14 @@ fun BirthdayDropdownCard(name: String, date: String, imagePainter: Painter) {
 }
 
 @Composable
-fun SongsCard(item: Triple<String, String, Int>) {
+fun SongsCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .width(160.dp)
             .height(120.dp)
-
-    ) {
+            .clickable { onClick() } // <-- handle click
+    )  {
         Box (
             contentAlignment = Alignment.Center
         ){
@@ -361,12 +368,12 @@ fun SongsCard(item: Triple<String, String, Int>) {
             )
             Column(
                 modifier = Modifier.fillMaxSize()
-                    .background(Color(0x55000000))
+                    .background(Color(0x77000000))
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(item.first, color = Color.White, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(
+                Text(item.first, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(
                     Font(R.font.roboto, weight = FontWeight.Normal)))
                 Text(item.second, color = Color.White, fontSize = 12.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(
                     Font(R.font.roboto, weight = FontWeight.Medium)))
@@ -380,6 +387,6 @@ fun SongsCard(item: Triple<String, String, Int>) {
 @Composable
 fun homepreviw(){
     CSIKNCTheme {
-        HomeScreen()
-    }
+        val navController = rememberNavController()
+        HomeScreen(navController)    }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576932554489",
+    "project_id": "csi-knc",
+    "storage_bucket": "csi-knc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576932554489:android:3ce3183e6843eb3f43e428",
+        "android_client_info": {
+          "package_name": "com.csi.csi_knc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnQw5oYQgyUTPX6SHWDuJXnSTXM2JmyEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
