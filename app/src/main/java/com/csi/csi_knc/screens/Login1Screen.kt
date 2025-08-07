@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.csi.csi_knc.R
+import com.csi.csi_knc.Routes
 import com.csi.csi_knc.ui.theme.CSIKNCTheme
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +42,7 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun Login1Screen(navController: NavController) {
-    var showTextField by remember { mutableStateOf(true) }
+    var showTextField by remember { mutableStateOf(false) }
     var inputText by remember { mutableStateOf("") }
     var showOtpField by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -90,7 +91,8 @@ fun Login1Screen(navController: NavController) {
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = { showTextField = true },
+                onClick = {navController.navigate(Routes.Home.route)
+                },
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .width(380.dp)
