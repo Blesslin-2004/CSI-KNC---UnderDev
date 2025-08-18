@@ -6,4 +6,5 @@ sealed class Routes(val route: String) {
     data object Home : Routes("home")
     data object Keerthanaigal : Routes("keerthanaigal")
     data object Convention : Routes("convention")
+    data object Announcements : Routes("announcements")
 }

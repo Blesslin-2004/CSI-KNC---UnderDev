@@ -43,7 +43,6 @@ import com.csi.csi_knc.Routes
 @Composable
 fun HomeScreen(navController: NavController){
     val featuredItems = listOf(
-        Triple("நேரலை", "(Live Meetings)", R.drawable.live_meeting),
         Triple("அறிவிப்புகள்", "(Announcements)", R.drawable.announcements),
         Triple("பாக்கிகள்", "(Pendings)", R.drawable.pending)
     )
@@ -72,7 +71,7 @@ fun HomeScreen(navController: NavController){
                     .padding(16.dp)
             ) {
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(50.dp))
 
                 // Today's Verse
                 Card(
@@ -102,7 +101,7 @@ fun HomeScreen(navController: NavController){
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "நான் மரண இருளின் பள்ளத்தாக்கிலே நடந்தாலும் பொல்லாப்புக்குப் பயப்படேன்; தேவரீர் என்னோடேகூடஇருக்கிறீர்; உமது கோலும் உமது தடியும் என்னைத் தேற்றும். சங்கீதம் 23:1",
+                                text = "நான் மரண இருளின் பள்ளத்தாக்கிலே நடந்தாலும் பொல்லாப்புக்குப் பயப்படேன்; உமது கோலும் உமது தடியும் என்னைத் தேற்றும். சங்கீதம் 23:1",
                                 fontSize = 14.sp,
                                 textAlign = TextAlign.Center,
                                 color = Color(0xFFFFFFFF),
@@ -114,11 +113,11 @@ fun HomeScreen(navController: NavController){
 
                 Spacer(Modifier.height(16.dp))
     
-                BirthdayDropdownCard(
+              /*  BirthdayDropdownCard(
                     name = "E.Blesslin",
                     date = "Jan 10, 2004",
                     imagePainter = painterResource(R.drawable.birthdaywishimage) // Replace with your image
-                )
+                )*/
 
                 Spacer(Modifier.height(16.dp))
 
@@ -129,15 +128,18 @@ fun HomeScreen(navController: NavController){
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
 
-
                     // Right side: Two vertically stacked cards
                     Row(
                         modifier = Modifier
                             .weight(1f),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        FeatureCard(featuredItems[1])
-                        FeatureCard(featuredItems[2])
+                        FeatureCard(featuredItems[0]){
+                            navController.navigate(Routes.Announcements.route)
+                        }
+                       FeatureCard(featuredItems[1]){
+
+                       }
                     }
                 }
                 Spacer(Modifier.height(16.dp))
@@ -179,7 +181,7 @@ fun HomeScreen(navController: NavController){
                     }
                 }
 
-                Spacer(Modifier.height(72.dp)) // space for bottom nav
+                Spacer(Modifier.height(150.dp)) // space for bottom nav
             }
 
             // Bottom Navigation Bar
@@ -199,6 +201,8 @@ fun HomeScreen(navController: NavController){
                }
             }
         }
+
+
 }
 
 @Composable
@@ -218,17 +222,17 @@ fun BottomNavigationItem(label: String, @DrawableRes iconRes: Int) {
 
 
 @Composable
-fun FeatureCard(item: Triple<String, String, Int>) {
+fun FeatureCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .width(160.dp)
-            .height(120.dp)
-
+            .height(130.dp)
+            .clickable { onClick() }
     ) {
-        Box (
+        Box(
             contentAlignment = Alignment.Center
-        ){
+        ) {
             Image(
                 painter = painterResource(id = item.third),
                 contentDescription = item.first,
@@ -236,20 +240,32 @@ fun FeatureCard(item: Triple<String, String, Int>) {
                 modifier = Modifier.fillMaxSize()
             )
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .background(Color(0x55000000))
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(item.first, color = Color.White, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(
-                    Font(R.font.roboto, weight = FontWeight.Normal)))
-                Text(item.second, color = Color.White, fontSize = 12.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(
-                    Font(R.font.roboto, weight = FontWeight.Medium)))
+                Text(
+                    item.first,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.roboto, weight = FontWeight.Normal))
+                )
+                Text(
+                    item.second,
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.roboto, weight = FontWeight.Medium))
+                )
             }
         }
     }
 }
+
 
 @Composable
 fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier) {
@@ -257,7 +273,7 @@ fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier)
         shape = RoundedCornerShape(5.dp),
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(130.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center
@@ -274,11 +290,7 @@ fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier)
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val Robotofont = FontFamily(
-                    Font(R.font.roboto, weight = FontWeight.Normal),
-                    Font(R.font.roboto, weight = FontWeight.Medium),
-                    Font(R.font.roboto, weight = FontWeight.Bold)
-                )
+
                 Text(item.first, color = Color.White, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, fontFamily = FontFamily(
                     Font(R.font.roboto, weight = FontWeight.Normal)))
                 Text(item.second, color = Color.White, fontSize = 12.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(
@@ -354,7 +366,7 @@ fun SongsCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .width(160.dp)
-            .height(120.dp)
+            .height(130.dp)
             .clickable { onClick() } // <-- handle click
     )  {
         Box (

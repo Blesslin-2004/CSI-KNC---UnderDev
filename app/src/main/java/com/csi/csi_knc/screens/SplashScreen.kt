@@ -2,6 +2,7 @@ package com.csi.csi_knc
 
 
 import android.graphics.Color
+import android.util.Log
 import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,15 +22,29 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 import com.csi.csi_knc.ui.theme.CSIKNCTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavHostController? = null) {
 
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val user = currentUser.toString()
+
+
+
     LaunchedEffect(Unit) {
         delay(2000)
-        navController?.navigate(Routes.Login1.route) {
-            popUpTo(Routes.Splash.route) { inclusive = true }
+        if (currentUser != null) {
+            Log.d("Current user", user)
+            navController?.navigate(Routes.Home.route) {
+                popUpTo(Routes.Login1.route) { inclusive = true } // remove login from back stack
+                launchSingleTop = true // avoid multiple copies of home
+            }
+        } else {
+            Log.d("Current user", "No user found")
+            navController?.navigate(Routes.Login1.route)
+
         }
     }
     Column(modifier = Modifier.fillMaxSize().background(_root_ide_package_.androidx.compose.ui.graphics.Color(0xFFfffcee)),
