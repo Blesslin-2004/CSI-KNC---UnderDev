@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.csi.csi_knc"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 2
         versionName = "1.1"

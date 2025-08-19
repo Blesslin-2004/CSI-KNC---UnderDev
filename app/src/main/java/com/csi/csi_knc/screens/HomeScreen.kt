@@ -2,6 +2,7 @@ package com.csi.csi_knc.screens
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.*
@@ -39,6 +41,10 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.csi.csi_knc.Routes
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeScreen(navController: NavController){
@@ -58,6 +64,18 @@ fun HomeScreen(navController: NavController){
         Triple("கன்வென்ஷன் கீதங்கள்", "", R.drawable.convention)
     )
 
+    var verse by remember { mutableStateOf<String?>(null) }
+    var reference by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        val result = todayverse()
+        result?.let {
+            verse = it.first
+            reference = it.second
+        }
+        isLoading = false
+    }
 
     Box(
             modifier = Modifier.fillMaxSize()
@@ -77,36 +95,77 @@ fun HomeScreen(navController: NavController){
                 Card(
                     shape = RoundedCornerShape(5.dp),
                     elevation = CardDefaults.cardElevation(6.dp),
-                    modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                    modifier = Modifier.fillMaxSize()
 
                 ) {
                     Box(
                         modifier = Modifier.fillMaxSize()
-                    ){
+                    ) {
                         Image(
-                            painter = painterResource(id= R.drawable.dailyverse),
+                            painter = painterResource(id = R.drawable.dailyverse),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop,
                             contentDescription = "Dailyverse",
-
                         )
-                        Column(modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally) {
+
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
                             Text(
                                 text = "இன்றைய வார்த்தை",
+                                textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF7BB3FE),
-
                                 fontSize = 16.sp
                             )
                             Spacer(Modifier.height(8.dp))
-                            Text(
-                                text = "நான் மரண இருளின் பள்ளத்தாக்கிலே நடந்தாலும் பொல்லாப்புக்குப் பயப்படேன்; உமது கோலும் உமது தடியும் என்னைத் தேற்றும். சங்கீதம் 23:1",
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Center,
-                                color = Color(0xFFFFFFFF),
-                                fontWeight = FontWeight.Medium
-                            )
+
+                            // 🔥 Smooth transition for verse
+                            Crossfade(targetState = isLoading to verse) { (loading, v) ->
+                                if (loading) {
+                                    Text(
+                                        text = "உங்களுக்கான இன்றைய ஆசீர்வாதமான வார்த்தை...",
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                    Spacer(Modifier.height(5.dp))
+
+                                } else {
+                                    Text(
+                                        text = v ?: "Not available",
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+
+                            Spacer(Modifier.height(5.dp))
+
+                            Crossfade(targetState = isLoading to reference) { (loading, r) ->
+                                if (loading) {
+                                    Text(
+                                        text = "...",
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                } else {
+                                    Text(
+                                        text = r ?: "",
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -394,6 +453,18 @@ fun SongsCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
     }
 }
 
+suspend fun todayverse() : Pair<String, String>?{
+    val db = FirebaseFirestore.getInstance()
+    val todaydate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+    val firestore = db.collection("DailyVerse").document(todaydate).get().await()
+
+    return if(firestore.exists()){
+        val verse = firestore.getString("verse") ?: ""
+        val reference = firestore.getString("reference") ?: ""
+        Pair(verse, reference)
+    }else null
+}
 
 @Preview(showBackground = true)
 @Composable
