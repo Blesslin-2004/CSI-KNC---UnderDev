@@ -50,13 +50,24 @@ fun Announcements(navController: NavController) {
         val db = FirebaseFirestore.getInstance()
         try {
             val snapshot = db.collection("Announcements").get().await()
-            announcements = snapshot.documents.map { doc ->
-                Announcement(
-                    title = doc.getString("Announcement_name") ?: "",
-                    date = doc.getString("Date") ?: "",
-                    description = doc.getString("Description") ?: ""
+            if(snapshot.isEmpty){
+                announcements = listOf(
+                    Announcement(
+                        title = "No Announcements",
+                        date = "",
+                        description = ""
+                    )
                 )
+            }else{
+                announcements = snapshot.documents.map { doc ->
+                    Announcement(
+                        title = doc.getString("Announcement_name") ?: "",
+                        date = doc.getString("Date") ?: "",
+                        description = doc.getString("Description") ?: ""
+                    )
+                }
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -138,8 +149,6 @@ fun ExpandableAnnouncementCard(announcement: Announcement) {
                     contentDescription = if (expanded) "Collapse" else "Expand"
                 )
             }
-
-            // 🔥 Smooth expand/collapse with fade + slide
             AnimatedVisibility(
                 visible = expanded,
                 enter = expandVertically(animationSpec = tween(400)) + fadeIn(),

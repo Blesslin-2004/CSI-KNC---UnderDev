@@ -1,5 +1,6 @@
 package com.csi.csi_knc.screens
 
+import android.app.Activity
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -41,10 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.csi.csi_knc.Routes
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.compose.ui.window.Dialog
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun HomeScreen(navController: NavController){
@@ -68,6 +76,12 @@ fun HomeScreen(navController: NavController){
     var reference by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
+    val auth = FirebaseAuth.getInstance()
+    var showdialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val activity = context as Activity
+
+
     LaunchedEffect(Unit) {
         val result = todayverse()
         result?.let {
@@ -75,6 +89,8 @@ fun HomeScreen(navController: NavController){
             reference = it.second
         }
         isLoading = false
+
+        checkForUpdate(activity)
     }
 
     Box(
@@ -196,9 +212,17 @@ fun HomeScreen(navController: NavController){
                         FeatureCard(featuredItems[0]){
                             navController.navigate(Routes.Announcements.route)
                         }
-                       FeatureCard(featuredItems[1]){
+                        FeatureCard(featuredItems[1]) {
+                            if(auth.currentUser?.isAnonymous == true){
+                                showdialog = true
+                            }else{
+                                navController.navigate(Routes.Pendings.route)
 
-                       }
+                            }
+                        }
+                        if (showdialog) {
+                            RestrictedAccessPopup { showdialog = false }
+                        }
                     }
                 }
                 Spacer(Modifier.height(16.dp))
@@ -466,10 +490,91 @@ suspend fun todayverse() : Pair<String, String>?{
     }else null
 }
 
+@Composable
+fun RestrictedAccessPopup(
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Restricted",
+                    tint = Color(0xFFd32f2f),
+                    modifier = Modifier.size(60.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Access Restricted",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Not Available for Guest Login. Only church members can access this feature.",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = { onDismiss() },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("OK", color = Color.White)
+                }
+            }
+        }
+    }
+}
+
+fun checkForUpdate(activity: Activity) {
+    val appUpdateManager = AppUpdateManagerFactory.create(activity)
+
+    val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+    appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+        if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+            && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+        ) {
+            // Start immediate update flow
+            appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.IMMEDIATE,
+                activity,
+                123 // requestCode
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun homepreviw(){
+fun homePreview(){
     CSIKNCTheme {
-        val navController = rememberNavController()
-        HomeScreen(navController)    }
+        HomeScreen(navController = rememberNavController().apply { /* no-op navigate */ })
+    }
 }
+

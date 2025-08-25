@@ -13,8 +13,8 @@ android {
         applicationId = "com.csi.csi_knc"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,6 +54,7 @@ dependencies {
 
     implementation ("com.google.firebase:firebase-bom:34.0.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation ("com.google.android.play:app-update:2.1.0")
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
 

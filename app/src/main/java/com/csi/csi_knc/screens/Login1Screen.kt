@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -60,7 +62,7 @@ fun Login1Screen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(Color(0xFFFFFFFF)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val logo = painterResource(id = R.drawable.knclogo)
@@ -70,36 +72,51 @@ fun Login1Screen(navController: NavController) {
             contentDescription = "Logo",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(450.dp)
+                .height(550.dp)
                 .padding(top = 20.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         if (!showTextField && !showOtpField) {
-            Button(
-                onClick = { showTextField = true },
-                shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
-                    .width(380.dp)
-                    .height(50.dp),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
+            Column(
+                verticalArrangement = Arrangement.Bottom
             ) {
-                Text("CHURCH MEMBER LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
-            }
 
-            Spacer(modifier = Modifier.height(15.dp))
+                Button(
+                    onClick = { showTextField = true },
+                    shape = RoundedCornerShape(5.dp),
+                    modifier = Modifier
+                        .width(380.dp)
+                        .height(50.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp)
+                ) {
+                    Text("CHURCH MEMBER LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
+                }
 
-            Button(
-                onClick = {navController.navigate(Routes.Home.route)
-                },
-                shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
-                    .width(380.dp)
-                    .height(50.dp),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
-            ) {
-                Text("GUEST LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(
+                    onClick = {
+                        auth.signInAnonymously()
+                            .addOnCompleteListener { task ->
+                                if(task.isSuccessful){
+                                    navController.navigate(Routes.Home.route){
+                                        popUpTo(Routes.Login1.route){ inclusive = true}
+                                    }
+                                }else{
+                                    Toast.makeText(context, "Guest login failed", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    },
+                    shape = RoundedCornerShape(5.dp),
+                    modifier = Modifier
+                        .width(380.dp)
+                        .height(50.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp)
+                ) {
+                    Text("GUEST LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
+                }
             }
         }
 

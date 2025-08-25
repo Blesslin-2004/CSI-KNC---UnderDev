@@ -1,5 +1,6 @@
 package com.csi.csi_knc.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -62,64 +64,73 @@ fun Keerthanaigal(navController: NavController) {
     LaunchedEffect(Unit) {
         viewModel.loadDocumentNames()
     }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)   // 👈 ensures the full screen is white
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(if (selectedData == null) "Keerthanaigal" else "Details")
+                    },
+                    navigationIcon = {
+                        if (selectedData != null) {
+                            IconButton(onClick = { viewModel.clearSelection() }) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            }
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            if (selectedData == null) {
+                // List View
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(padding)
+                        .fillMaxSize().background(androidx.compose.ui.graphics.Color(0xFFFFFFFF)),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(docNames) { name ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                                .clickable {
+                                    viewModel.loadDocumentData(name)
+                                },
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(if (selectedData == null) "Keerthanaigal" else "Details")
-                },
-                navigationIcon = {
-                    if (selectedData != null) {
-                        IconButton(onClick = { viewModel.clearSelection() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        ) {
+                            Text(
+                                text = name,
+                                modifier = Modifier.padding(16.dp)
+                            )
                         }
                     }
                 }
-            )
-        }
-    ) { padding ->
-        if (selectedData == null) {
-            // List View
-            LazyColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(docNames) { name ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .clickable {
-                                viewModel.loadDocumentData(name)
-                            }
-                    ) {
+            } else {
+                // Details View
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .fillMaxSize()
+                        .padding(16.dp).verticalScroll(rememberScrollState())
+                ) {
+                    selectedData.forEach { (key, value) ->
                         Text(
-                            text = name,
-                            modifier = Modifier.padding(16.dp)
+                            text = " கீ. கீ : $key: \n \n$value",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(vertical = 4.dp)
                         )
                     }
                 }
             }
-        } else {
-            // Details View
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(16.dp).verticalScroll(rememberScrollState())
-            ) {
-                selectedData.forEach { (key, value) ->
-                    Text(
-                        text = " கீ. கீ : $key: \n \n$value",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-            }
         }
+
     }
 }
 

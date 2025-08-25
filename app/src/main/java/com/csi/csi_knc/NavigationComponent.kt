@@ -16,5 +16,6 @@ fun NavigationComponent() {
         composable(Routes.Keerthanaigal.route) { Keerthanaigal(navController) }
         composable(Routes.Convention.route) { Convention(navController) }
         composable(Routes.Announcements.route) { Announcements(navController) }
+        composable(Routes.Pendings.route) { Pendings(navController) }
     }
 }

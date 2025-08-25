@@ -1,32 +1,31 @@
 package com.csi.csi_knc.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.csi.csi_knc.Routes
 
 @Composable
-fun Convention(navController: NavController) {
+fun PrayerPoints(navController: NavController){
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Under development")
-
+        Text(
+            text = "Under development"
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun outputs(){
-    Convention(navController = rememberNavController())
+fun Outputs(){
+    PrayerPoints(navController = rememberNavController())
 }
