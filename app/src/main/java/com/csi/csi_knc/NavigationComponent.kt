@@ -17,5 +17,7 @@ fun NavigationComponent() {
         composable(Routes.Convention.route) { Convention(navController) }
         composable(Routes.Announcements.route) { Announcements(navController) }
         composable(Routes.Pendings.route) { Pendings(navController) }
+        composable(Routes.Praises.route){ Praises(navController)}
+        composable (Routes.PrayerRequest1.route){ PrayerRequest1(navController) }
     }
 }

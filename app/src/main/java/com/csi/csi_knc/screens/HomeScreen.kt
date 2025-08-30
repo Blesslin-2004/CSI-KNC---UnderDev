@@ -62,13 +62,15 @@ fun HomeScreen(navController: NavController){
     )
 
     val prayerItems = listOf(
-        Triple("1000 ஸ்தோத்திரங்கள்", "(1000 Praises)", R.drawable.praises),
+        Triple("ஆராதனை முறைமை", "(Order of Service)", R.drawable.serviceorder),
         Triple("ஜெப குறிப்புகள்", "(Prayer Points)", R.drawable.prayer_points),
-        Triple("ஜெப விண்ணப்பம் ", "(Prayer Request)", R.drawable.prayer_request)
+        Triple("ஜெப விண்ணப்பம் ", "(Prayer Request)", R.drawable.prayer_request),
+        Triple("1000 ஸ்தோத்திரங்கள்", "(1000 Praises)", R.drawable.praises)
+
     )
 
     val SongItems = listOf(
-        Triple("கீதங்களும் கீர்த்தனைகளும்", "", R.drawable.keerthanaigal),
+        Triple("கீதங்களும்\nகீர்த்தனைகளும்", "", R.drawable.keerthanaigal),
         Triple("கன்வென்ஷன் கீதங்கள்", "", R.drawable.convention)
     )
 
@@ -242,10 +244,10 @@ fun HomeScreen(navController: NavController){
                             .weight(1f),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        SongsCard(SongItems[0]) {
+                        SongsCard(SongItems[0], Modifier.weight(1f)) {
                             navController.navigate(Routes.Keerthanaigal.route)
                         }
-                        SongsCard(SongItems[1]) {
+                        SongsCard(SongItems[1], Modifier.weight(1f)) {
                             navController.navigate(Routes.Convention.route)
                         }
                     }
@@ -257,10 +259,19 @@ fun HomeScreen(navController: NavController){
                 Text("Prayer Support", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    PrayerCard(prayerItems[0])
+                    PrayerCard(prayerItems[0]){
+
+                    }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        PrayerCard(prayerItems[1], Modifier.weight(1f))
-                        PrayerCard(prayerItems[2], Modifier.weight(1f))
+                        PrayerCard(prayerItems[1], Modifier.weight(1f)){
+
+                        }
+                        PrayerCard(prayerItems[2], Modifier.weight(1f)){
+                            navController.navigate(Routes.PrayerRequest1.route)
+                        }
+                    }
+                    PrayerCard(prayerItems[3]){
+                        navController.navigate(Routes.Praises.route)
                     }
                 }
 
@@ -311,7 +322,7 @@ fun FeatureCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
         modifier = Modifier
             .width(160.dp)
             .height(130.dp)
-            .clickable { onClick() }
+            .clickable { onClick()},
     ) {
         Box(
             contentAlignment = Alignment.Center
@@ -351,12 +362,13 @@ fun FeatureCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
 
 
 @Composable
-fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier) {
+fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = modifier
             .fillMaxWidth()
             .height(130.dp)
+            .clickable { onClick() }
     ) {
         Box(
             contentAlignment = Alignment.Center
@@ -444,11 +456,10 @@ fun BirthdayDropdownCard(name: String, date: String, imagePainter: Painter) {
 }
 
 @Composable
-fun SongsCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
+fun SongsCard(item: Triple<String, String, Int>,modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
-            .width(160.dp)
             .height(130.dp)
             .clickable { onClick() } // <-- handle click
     )  {
@@ -481,7 +492,7 @@ suspend fun todayverse() : Pair<String, String>?{
     val db = FirebaseFirestore.getInstance()
     val todaydate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    val firestore = db.collection("DailyVerse").document(todaydate).get().await()
+    val firestore = db.collection("DailyVerses").document(todaydate).get().await()
 
     return if(firestore.exists()){
         val verse = firestore.getString("verse") ?: ""

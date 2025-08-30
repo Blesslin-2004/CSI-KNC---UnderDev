@@ -87,8 +87,8 @@ fun Login1Screen(navController: NavController) {
                     onClick = { showTextField = true },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
-                        .width(380.dp)
-                        .height(50.dp),
+                        .fillMaxWidth()
+                        .height(50.dp).padding(horizontal = 20.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp)
                 ) {
                     Text("CHURCH MEMBER LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
@@ -111,8 +111,8 @@ fun Login1Screen(navController: NavController) {
                     },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
-                        .width(380.dp)
-                        .height(50.dp),
+                        .fillMaxWidth()
+                        .height(50.dp).padding(horizontal = 20.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp)
                 ) {
                     Text("GUEST LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))

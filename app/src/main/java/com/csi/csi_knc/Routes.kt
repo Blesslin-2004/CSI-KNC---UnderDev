@@ -8,4 +8,6 @@ sealed class Routes(val route: String) {
     data object Convention : Routes("convention")
     data object Announcements : Routes("announcements")
     data object Pendings : Routes("pendings")
+    data object Praises : Routes("praises")
+    data object PrayerRequest1 : Routes("prayerrequest")
 }

@@ -41,8 +41,6 @@ data class Announcement(
 
 @Composable
 fun Announcements(navController: NavController) {
-
-
     var announcements by remember { mutableStateOf<List<Announcement>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
 
@@ -121,7 +119,7 @@ fun ExpandableAnnouncementCard(announcement: Announcement) {
                 indication = null
             ) { expanded = !expanded },
         elevation = CardDefaults.cardElevation(1.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F3F3))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
