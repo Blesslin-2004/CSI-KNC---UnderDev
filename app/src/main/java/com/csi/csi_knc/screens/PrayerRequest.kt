@@ -132,11 +132,10 @@ fun PrayerRequest1(navController: NavController){
                             println("Error writing document: $e")
                         }
                 }
+
                 else{
                     Toast.makeText(context, "Please fill all fields" , Toast.LENGTH_SHORT).show()
                 }
-
-
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(5.dp),

@@ -10,4 +10,6 @@ sealed class Routes(val route: String) {
     data object Pendings : Routes("pendings")
     data object Praises : Routes("praises")
     data object PrayerRequest1 : Routes("prayerrequest")
+    data object LiveScreen : Routes("livescreen")
+    data object AboutScreen : Routes("aboutscreen")
 }

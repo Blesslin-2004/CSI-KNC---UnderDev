@@ -119,7 +119,9 @@ fun ExpandableAnnouncementCard(announcement: Announcement) {
                 indication = null
             ) { expanded = !expanded },
         elevation = CardDefaults.cardElevation(1.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F3F3))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F1F1))
+
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

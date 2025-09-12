@@ -39,6 +39,8 @@ import com.csi.csi_knc.R
 import com.csi.csi_knc.ui.theme.CSIKNCTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.csi.csi_knc.Routes
@@ -98,7 +100,6 @@ fun HomeScreen(navController: NavController){
     Box(
             modifier = Modifier.fillMaxSize()
         ){
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -107,7 +108,7 @@ fun HomeScreen(navController: NavController){
                     .padding(16.dp)
             ) {
 
-                Spacer(Modifier.height(50.dp))
+                Spacer(Modifier.height(20.dp))
 
                 // Today's Verse
                 Card(
@@ -201,20 +202,15 @@ fun HomeScreen(navController: NavController){
                 // Featured Section
                 Text("Featured", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(Modifier.height(8.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
 
                     // Right side: Two vertically stacked cards
                     Row(
-                        modifier = Modifier
-                            .weight(1f),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        FeatureCard(featuredItems[0]){
+                        FeatureCard(featuredItems[0], Modifier.weight(1f)){
                             navController.navigate(Routes.Announcements.route)
                         }
-                        FeatureCard(featuredItems[1]) {
+                        FeatureCard(featuredItems[1], Modifier.weight(1f)) {
                             if(auth.currentUser?.isAnonymous == true){
                                 showdialog = true
                             }else{
@@ -226,7 +222,6 @@ fun HomeScreen(navController: NavController){
                             RestrictedAccessPopup { showdialog = false }
                         }
                     }
-                }
                 Spacer(Modifier.height(16.dp))
 
 
@@ -242,7 +237,7 @@ fun HomeScreen(navController: NavController){
                     Row(
                         modifier = Modifier
                             .weight(1f),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         SongsCard(SongItems[0], Modifier.weight(1f)) {
                             navController.navigate(Routes.Keerthanaigal.route)
@@ -275,62 +270,78 @@ fun HomeScreen(navController: NavController){
                     }
                 }
 
-                Spacer(Modifier.height(150.dp)) // space for bottom nav
+                Spacer(Modifier.height(100.dp)) // space for bottom nav
             }
 
             // Bottom Navigation Bar
-            BottomAppBar(
-                containerColor = Color(0xFFF2F2F2),
-                modifier = Modifier.align ( Alignment.BottomCenter )
-            ) {
+        BottomAppBar(
+            containerColor = Color(0xFFFBFBFB),
+            modifier = Modifier
+                .align(Alignment.BottomCenter).shadow(
+                    elevation = (-6).dp,
+                    shape = RoundedCornerShape(8.dp),
+                    ambientColor = Color.Black,
+                    spotColor = Color.Black,
+                    clip = false
+                ),
+        ) {
                Row (
                    modifier = Modifier.fillMaxWidth(),
                    horizontalArrangement = Arrangement.SpaceEvenly
                ){
-                   BottomNavigationItem("Home", R.drawable.homeasset)
-                   BottomNavigationItem("Live", R.drawable.liveasset)
-                   BottomNavigationItem("Gallery", R.drawable.galleryasset)
-                   BottomNavigationItem("About", R.drawable.aboutasset)
-                   BottomNavigationItem("You", R.drawable.youasset)
+                   BottomNavigationItem("Home", R.drawable.homeasset){
+                       navController.navigate(Routes.Home.route)
+                   }
+                   BottomNavigationItem("Services", R.drawable.liveasset){
+                        navController.navigate(Routes.LiveScreen.route)
+                   }
+                   BottomNavigationItem("Offering", R.drawable.offeringasset){
+
+                   }
+                   BottomNavigationItem("Church", R.drawable.aboutasset){
+                        navController.navigate(Routes.AboutScreen.route)
+                   }
+                   BottomNavigationItem("Account", R.drawable.accountasset){
+
+                   }
                }
             }
         }
-
-
 }
 
 @Composable
-fun BottomNavigationItem(label: String, @DrawableRes iconRes: Int) {
+fun BottomNavigationItem(label: String, @DrawableRes iconRes: Int, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+     {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = label,
-            modifier = Modifier.size(24.dp),
-            tint = Color.Unspecified // Use original icon colors
+            modifier = Modifier.size(24.dp).clickable{onClick()},
+            tint = Color.Unspecified,
         )
-        Text(label, fontSize = 12.sp)
+        Text(label, fontSize = 12.sp, modifier = Modifier.clickable{onClick()})
     }
 }
 
-
 @Composable
-fun FeatureCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
+fun FeatureCard(
+    item: Triple<String, String, Int>,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(5.dp),
-        modifier = Modifier
-            .width(160.dp)
+        modifier = modifier
             .height(130.dp)
-            .clickable { onClick()},
+            .clickable { onClick() }
     ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
+        Box(contentAlignment = Alignment.Center) {
             Image(
                 painter = painterResource(id = item.third),
                 contentDescription = item.first,
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
             Column(
@@ -361,12 +372,13 @@ fun FeatureCard(item: Triple<String, String, Int>, onClick: () -> Unit) {
 }
 
 
+
 @Composable
 fun PrayerCard(item: Triple<String, String, Int>, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .height(130.dp)
             .clickable { onClick() }
     ) {
@@ -474,8 +486,7 @@ fun SongsCard(item: Triple<String, String, Int>,modifier: Modifier = Modifier, o
             )
             Column(
                 modifier = Modifier.fillMaxSize()
-                    .background(Color(0x77000000))
-                    .padding(8.dp),
+                    .background(Color(0x77000000)),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

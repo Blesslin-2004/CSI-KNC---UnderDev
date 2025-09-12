@@ -19,5 +19,7 @@ fun NavigationComponent() {
         composable(Routes.Pendings.route) { Pendings(navController) }
         composable(Routes.Praises.route){ Praises(navController)}
         composable (Routes.PrayerRequest1.route){ PrayerRequest1(navController) }
+        composable (Routes.LiveScreen.route){ LiveScreen(navController) }
+        composable(Routes.AboutScreen.route) { AboutScreen(navController) }
     }
 }

@@ -67,7 +67,7 @@ fun Keerthanaigal(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)   // 👈 ensures the full screen is white
+            .background(Color.White)
     ) {
         Scaffold(
             containerColor = Color.Transparent,
@@ -102,8 +102,7 @@ fun Keerthanaigal(navController: NavController) {
                                 .clickable {
                                     viewModel.loadDocumentData(name)
                                 },
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
-
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F1F1))
                         ) {
                             Text(
                                 text = name,
