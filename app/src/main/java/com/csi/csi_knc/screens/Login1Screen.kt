@@ -1,6 +1,7 @@
 package com.csi.csi_knc.screens
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -40,6 +41,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -58,6 +60,8 @@ fun Login1Screen(navController: NavController) {
     // OTP states
     val focusRequesters = remember { List(6) { FocusRequester() } }
     val otpValues = remember { mutableStateListOf("", "", "", "", "", "") }
+
+    val db = firestore?.collection("FamilyMembers")?.document(inputText)?.get()
 
     Column(
         modifier = Modifier
@@ -188,6 +192,9 @@ fun Login1Screen(navController: NavController) {
 
                                             PhoneAuthProvider.verifyPhoneNumber(options)
                                         }
+                                    }?.addOnFailureListener {
+                                        Toast.makeText(context, "Family number not available",
+                                            Toast.LENGTH_SHORT).show()
                                     }
                             }
 
@@ -269,6 +276,10 @@ fun Login1Screen(navController: NavController) {
                                     if (task.isSuccessful) {
                                         Toast.makeText(context, "Phone Verified!", Toast.LENGTH_SHORT).show()
                                         Log.d("OTP", "Sign in success: ${auth.currentUser?.uid}")
+                                        //family number sending to account screen
+                                        val prefs = context.getSharedPreferences("Accountnumber", Context.MODE_PRIVATE)
+                                        prefs.edit().putString("familynumber", inputText).apply()
+
                                         navController.navigate("home") {
                                             popUpTo("login") { inclusive = true }
                                         }

@@ -12,4 +12,6 @@ sealed class Routes(val route: String) {
     data object PrayerRequest1 : Routes("prayerrequest")
     data object LiveScreen : Routes("livescreen")
     data object AboutScreen : Routes("aboutscreen")
+    data object OfflineScreen : Routes("offlinescreen")
+    data object AccountScreen : Routes("accountscreen")
 }

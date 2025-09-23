@@ -21,5 +21,7 @@ fun NavigationComponent() {
         composable (Routes.PrayerRequest1.route){ PrayerRequest1(navController) }
         composable (Routes.LiveScreen.route){ LiveScreen(navController) }
         composable(Routes.AboutScreen.route) { AboutScreen(navController) }
+        composable(Routes.OfflineScreen.route) { OfflineScreen(navController) }
+        composable(Routes.AccountScreen.route) { AccountScreen(navController) }
     }
 }

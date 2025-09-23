@@ -10,7 +10,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -54,7 +52,16 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import androidx.compose.ui.platform.LocalContext
-
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun HomeScreen(navController: NavController){
@@ -95,6 +102,17 @@ fun HomeScreen(navController: NavController){
         isLoading = false
 
         checkForUpdate(activity)
+
+        context.observeConnectivity().collect { state ->
+            when (state) {
+                ConnectionState.Unavailable -> navController.navigate("offlinescreen") {
+                    popUpTo(0)
+                }
+                ConnectionState.Available -> navController.navigate("home") {
+                    popUpTo(0)
+                }
+            }
+        }
     }
 
     Box(
@@ -141,7 +159,7 @@ fun HomeScreen(navController: NavController){
                             )
                             Spacer(Modifier.height(8.dp))
 
-                            // 🔥 Smooth transition for verse
+                            //  transition for verse
                             Crossfade(targetState = isLoading to verse) { (loading, v) ->
                                 if (loading) {
                                     Text(
@@ -308,6 +326,185 @@ fun HomeScreen(navController: NavController){
             }
         }
 }
+
+
+@Composable
+fun HomeScreen2(navController: NavController) {
+
+    val featuredItems = listOf(
+        Triple("அறிவிப்புகள்", "(Announcements)", R.drawable.announcements),
+        Triple("பாக்கிகள்", "(Pendings)", R.drawable.pending)
+    )
+
+    val prayerItems = listOf(
+        Triple("ஆராதனை முறைமை", "(Order of Service)", R.drawable.serviceorder),
+        Triple("ஜெப குறிப்புகள்", "(Prayer Points)", R.drawable.prayer_points),
+        Triple("ஜெப விண்ணப்பம் ", "(Prayer Request)", R.drawable.prayer_request),
+        Triple("1000 ஸ்தோத்திரங்கள்", "(1000 Praises)", R.drawable.praises)
+    )
+
+    val SongItems = listOf(
+        Triple("கீதங்களும்\nகீர்த்தனைகளும்", "", R.drawable.keerthanaigal),
+        Triple("கன்வென்ஷன் கீதங்கள்", "", R.drawable.convention)
+    )
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            Spacer(Modifier.height(20.dp))
+
+            // Today's Verse
+            Card(
+                shape = RoundedCornerShape(5.dp),
+                elevation = CardDefaults.cardElevation(6.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.dailyverse),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "Dailyverse",
+                    )
+
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "இன்றைய வார்த்தை",
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF7BB3FE),
+                            fontSize = 16.sp
+                        )
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(
+                            text = "உங்களுக்கான இன்றைய ஆசீர்வாதமான வார்த்தை...",
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium,
+                        )
+
+                        Spacer(Modifier.height(5.dp))
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Featured Section
+            Text("Featured", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Spacer(Modifier.height(8.dp))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                FeatureCard(featuredItems[0], Modifier.weight(1f)) {
+                    navController.navigate(Routes.Announcements.route)
+                }
+                FeatureCard(featuredItems[1], Modifier.weight(1f)) {}
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Song book Section
+            Text("Song Book", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SongsCard(SongItems[0], Modifier.weight(1f)) {
+                    navController.navigate(Routes.Keerthanaigal.route)
+                }
+                SongsCard(SongItems[1], Modifier.weight(1f)) {
+                    navController.navigate(Routes.Convention.route)
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Prayer Support Section
+            Text("Prayer Support", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Spacer(Modifier.height(8.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                PrayerCard(prayerItems[0]) {}
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PrayerCard(prayerItems[1], Modifier.weight(1f)) {}
+                    PrayerCard(prayerItems[2], Modifier.weight(1f)) {
+                        navController.navigate(Routes.PrayerRequest1.route)
+                    }
+                }
+                PrayerCard(prayerItems[3]) {
+                    navController.navigate(Routes.Praises.route)
+                }
+            }
+
+            Spacer(Modifier.height(100.dp)) // space for bottom nav
+        }
+
+        // Row above Bottom Navigation Bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(Color(0xFF444444))
+                .align(Alignment.BottomCenter)  // anchor to bottom
+                .offset(y=(-75).dp),       // push it up above BottomAppBar height
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text("Above BottomAppBar", color = Color.White)
+        }
+
+
+        // Bottom Navigation Bar
+        BottomAppBar(
+            containerColor = Color(0xFFFBFBFB),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .shadow(
+                    elevation = (-6).dp,
+                    shape = RoundedCornerShape(8.dp),
+                    ambientColor = Color.Black,
+                    spotColor = Color.Black,
+                    clip = false
+                ),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                BottomNavigationItem("Home", R.drawable.homeasset) {
+                    navController.navigate(Routes.Home.route)
+                }
+                BottomNavigationItem("Services", R.drawable.liveasset) {
+                    navController.navigate(Routes.LiveScreen.route)
+                }
+                BottomNavigationItem("Offering", R.drawable.offeringasset) {}
+                BottomNavigationItem("Church", R.drawable.aboutasset) {
+                    navController.navigate(Routes.AboutScreen.route)
+                }
+                BottomNavigationItem("Account", R.drawable.accountasset) {}
+            }
+        }
+    }
+}
+
+
 
 @Composable
 fun BottomNavigationItem(label: String, @DrawableRes iconRes: Int, onClick: () -> Unit) {
@@ -503,13 +700,16 @@ suspend fun todayverse() : Pair<String, String>?{
     val db = FirebaseFirestore.getInstance()
     val todaydate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    val firestore = db.collection("DailyVerses").document(todaydate).get().await()
+    val firestore = db.collection("DailyVerses")
+        .document(todaydate)
+        .get()
+        .await()
 
-    return if(firestore.exists()){
-        val verse = firestore.getString("verse") ?: ""
-        val reference = firestore.getString("reference") ?: ""
+    return firestore.takeIf { it.exists() }?.let {
+        val verse = it.getString("verse").orEmpty()
+        val reference = it.getString("reference").orEmpty()
         Pair(verse, reference)
-    }else null
+    }
 }
 
 @Composable
@@ -592,11 +792,43 @@ fun checkForUpdate(activity: Activity) {
     }
 }
 
+enum class ConnectionState { Available, Unavailable }
+
+fun Context.observeConnectivity() = callbackFlow {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    fun getCurrentState(): ConnectionState {
+        val network = connectivityManager.activeNetwork
+        val caps = connectivityManager.getNetworkCapabilities(network)
+        return if (caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true) {
+            ConnectionState.Available
+        } else {
+            ConnectionState.Unavailable
+        }
+    }
+
+    val callback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) { trySend(ConnectionState.Available) }
+        override fun onLost(network: Network) { trySend(ConnectionState.Unavailable) }
+    }
+
+    // Emit initial state
+    trySend(getCurrentState())
+
+    // Register callback
+    val request = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .build()
+    connectivityManager.registerNetworkCallback(request, callback)
+
+    awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
+}.distinctUntilChanged()
+
 @Preview(showBackground = true)
 @Composable
 fun homePreview(){
     CSIKNCTheme {
-        HomeScreen(navController = rememberNavController().apply { /* no-op navigate */ })
+        HomeScreen2(navController = rememberNavController().apply { /* no-op navigate */ })
     }
 }
 
