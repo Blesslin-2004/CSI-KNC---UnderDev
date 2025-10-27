@@ -12,7 +12,20 @@
           "package_name": "com.csi.csi_knc"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "576932554489-ccn4macm3crmug3e6bhal2i8k6di4ffg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.csi.csi_knc",
+            "certificate_hash": "b074f3fec1816f60d9ba75fbd9715d98c3ec8f14"
+          }
+        },
+        {
+          "client_id": "576932554489-km9drq6ffkc5t9rahqnvp6rba4tboo25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBnQw5oYQgyUTPX6SHWDuJXnSTXM2JmyEI"
@@ -20,7 +33,55 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576932554489-km9drq6ffkc5t9rahqnvp6rba4tboo25.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "576932554489-c67ooaceh8mrq9ab6cas5pojc0g68u79.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.churchproject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576932554489:android:ae30ea3f8f05714f43e428",
+        "android_client_info": {
+          "package_name": "com.kpnorth.knc_app_csi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576932554489-km9drq6ffkc5t9rahqnvp6rba4tboo25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnQw5oYQgyUTPX6SHWDuJXnSTXM2JmyEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576932554489-km9drq6ffkc5t9rahqnvp6rba4tboo25.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "576932554489-c67ooaceh8mrq9ab6cas5pojc0g68u79.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.churchproject"
+              }
+            }
+          ]
         }
       }
     }
