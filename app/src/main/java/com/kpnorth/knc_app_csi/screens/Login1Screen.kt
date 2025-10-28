@@ -238,6 +238,10 @@ fun Login1Screen(navController: NavController) {
                                                                     Toast.makeText(context, "Auto Sign-in Success", Toast.LENGTH_SHORT).show()
                                                                 }
                                                             }
+
+                                                        val prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                                        prefs.edit().putString("familyNumber", inputText).apply()
+
                                                     }
 
                                                     override fun onVerificationFailed(e: FirebaseException) {

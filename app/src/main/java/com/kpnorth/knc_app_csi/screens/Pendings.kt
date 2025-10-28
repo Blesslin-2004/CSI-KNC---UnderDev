@@ -248,7 +248,7 @@ fun Pendings(navController: NavController) {
                     Tab(
                         selected = selectedTabIndex == index,
                         onClick = { selectedTabIndex = index },
-                        modifier = Modifier.padding(top = 10.dp),
+
                         text = {
                             Text(
                                 text = title,
@@ -264,7 +264,7 @@ fun Pendings(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
+
             ) {
                 Crossfade(targetState = selectedTabIndex) { index ->
                     when (index) {

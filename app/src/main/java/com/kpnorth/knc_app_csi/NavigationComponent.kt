@@ -1,6 +1,7 @@
 package com.kpnorth.knc_app_csi
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -8,6 +9,8 @@ import com.kpnorth.knc_app_csi.screens.*
 
 @Composable
 fun NavigationComponent() {
+    val userViewModel: UserViewModel = viewModel()
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.Splash.route) {
         composable(Routes.Splash.route) { SplashScreen(navController) }
@@ -23,7 +26,7 @@ fun NavigationComponent() {
         composable(Routes.AboutScreen.route) { AboutScreen(navController) }
         composable(Routes.OfflineScreen.route) { OfflineScreen(navController) }
         composable(Routes.OrderofService.route) { OrderofService(navController) }
-        composable(Routes.PrayerPoints.route) { PrayerPoints(navController) }
+        composable(Routes.PrayerPoints.route) { PrayerPoints( viewModel = userViewModel ,navController) }
 
 
     }

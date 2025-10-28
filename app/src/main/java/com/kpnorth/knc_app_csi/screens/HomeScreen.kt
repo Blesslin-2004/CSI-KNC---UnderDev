@@ -51,7 +51,11 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +63,11 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(navController: NavController){
     val featuredItems = listOf(
@@ -83,11 +91,54 @@ fun HomeScreen(navController: NavController){
     var verse by remember { mutableStateOf<String?>(null) }
     var reference by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
+    var Username by remember { mutableStateOf<String?>(null) }
 
     val auth = FirebaseAuth.getInstance()
     var showdialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as Activity
+
+    val phrases = listOf(
+        "Grace Wins Always",
+        "The Lord will fight for you\n      – Exodus 14:14",
+        "Chosen and Loved",
+        "Faith Over Fear",
+        "Be Still and Know",
+        "The Lord is good to all\n  – Psalm 145:9",
+        "Redeemed and Free",
+        "Let Go, Let God",
+        "The joy of the Lord is my strength\n       – Nehemiah 8:10",
+        "Hope in Him",
+        "Saved by Grace",
+        "The Lord is my Shepherd\n  – Psalm 23:1",
+        "Pray Without Ceasing",
+        "Love never fails\n – 1 Corinthians 13:8",
+        "Blessed Beyond Measure",
+        "He makes all things new\n  – Revelation 21:5",
+        "Rejoice Always",
+        "Fear not, for I am with you\n      – Isaiah 41:10",
+        "Walk by Faith",
+        "Be strong and courageous\n     – Joshua 1:9",
+        "Trust His Plan",
+        "God is within her; she will not fall\n         – Psalm 46:5",
+        "Hallelujah Always",
+        "Give thanks to the Lord\n  – Psalm 107:1",
+        "Let Your Light Shine",
+        "His grace is sufficient\n  – 2 Corinthians 12:9",
+        "I can do all things\n  – Philippians 4:13",
+        "With God, All Things Possible",
+        "The Lord is my light\n – Psalm 27:1",
+        "God is Love",
+        "Made for His Glory",
+        "Nothing is impossible with God\n       – Luke 1:37",
+        "Peace in Christ",
+        "Cast your cares on Him\n   – 1 Peter 5:7",
+        "Jesus is Lord"
+    )
+
+
+    var currentIndex by remember { mutableStateOf(0) }
+    var displayText by remember { mutableStateOf("") }
 
     var showExitDialog by remember { mutableStateOf(false) }
 
@@ -114,7 +165,27 @@ fun HomeScreen(navController: NavController){
             }
         )
     }
+
     LaunchedEffect(Unit) {
+
+        // ✅ Launch typing animation in a separate coroutine
+        launch {
+            while (true) {
+                val text = phrases[currentIndex]
+                for (i in text.indices) {
+                    displayText = text.substring(0, i + 1)
+                    delay(100)
+                }
+                delay(1500)
+                for (i in text.length downTo 1) {
+                    displayText = text.substring(0, i - 1)
+                    delay(60)
+                }
+                currentIndex = (currentIndex + 1) % phrases.size
+            }
+        }
+
+        // ✅ Now this part will execute normally
         val result = todayverse()
         result?.let {
             verse = it.first
@@ -133,6 +204,7 @@ fun HomeScreen(navController: NavController){
         }
     }
 
+
     Box(
             modifier = Modifier.fillMaxSize()
         ){
@@ -144,7 +216,31 @@ fun HomeScreen(navController: NavController){
                     .padding(16.dp)
             ) {
 
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(35.dp))
+
+                //Greeting
+                Text(
+                    text = "Welcome back," ,
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto, weight = FontWeight.Bold)),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF030303)
+                )
+                AnimatedContent(
+                    targetState = displayText,
+                    transitionSpec = { fadeIn() with fadeOut() },
+                    label = "TypingTextAnimation"
+                ) { text ->
+                    androidx.compose.material3.Text(
+                        text = text,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto, weight = FontWeight.Normal)),
+                        color = Color(0xFF333333),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Spacer(Modifier.height(25.dp))
+
 
                 // Today's Verse
                 Card(
@@ -156,6 +252,7 @@ fun HomeScreen(navController: NavController){
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
+
                         Image(
                             painter = painterResource(id = R.drawable.dailyverse),
                             modifier = Modifier.fillMaxSize(),
@@ -164,7 +261,7 @@ fun HomeScreen(navController: NavController){
                         )
 
                         Column(
-                            modifier = Modifier.padding(16.dp).background(Color(0x55000000)).fillMaxSize(),
+                            modifier = Modifier.background(Color(0x55000000)).fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
@@ -173,7 +270,8 @@ fun HomeScreen(navController: NavController){
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF7BB3FE),
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(top = 10.dp)
                             )
                             Spacer(Modifier.height(8.dp))
 
@@ -362,6 +460,7 @@ fun HomeScreen2(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

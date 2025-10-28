@@ -69,28 +69,6 @@ which outline usage rules, data practices, and your rights as a member.
 
 ---
 
-🚀 Release Highlights
-🏷️ v1.2.1 — Initial Release
-✅ Added Pending Differentiation
-
-🔍 Implemented Song Searching
-
-📄 Added Pagination in 1000 Praises
-
-📢 Integrated Announcements and Prayer Points
-
-🎥 Added Live Screen and Convention Sessions
-
-🕊️ Included Order of Service and Prayer Request modules
-
-🧩 Upcoming Enhancements
-🔄 Offline mode for songs and verses
-
-🕯️ Event reminder notifications
-
-📊 Member contribution tracker
-
-🌐 Multi-language support (Tamil + English)
 
 🙌 Credits
 Developed with ❤️ by Blesslin
