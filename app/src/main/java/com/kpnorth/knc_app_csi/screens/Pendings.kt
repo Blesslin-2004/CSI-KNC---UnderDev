@@ -1,5 +1,6 @@
 package com.kpnorth.knc_app_csi.screens
 
+import androidx.annotation.Keep
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kpnorth.knc_app_csi.Routes
 
+@Keep
 data class PendingItem(
     val pending_name: String = "",
     val amount: String = "",
@@ -34,6 +36,7 @@ data class PendingItem(
     val due_date : String = ""
 )
 
+@Keep
 data class personalPendingItem(
     val pending_name: String = "",
     val amount: String = "",

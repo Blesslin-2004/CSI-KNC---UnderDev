@@ -1,5 +1,6 @@
 package com.kpnorth.knc_app_csi.screens
 
+import androidx.annotation.Keep
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 // -----------------------------
 // 1️⃣ Data model
 // -----------------------------
+@Keep
 data class User(
     val point: String = "",
 )

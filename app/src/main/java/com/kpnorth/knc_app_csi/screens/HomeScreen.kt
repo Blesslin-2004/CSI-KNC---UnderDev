@@ -148,7 +148,7 @@ fun HomeScreen(navController: NavController){
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
-            title = { Text("Exit App", fontFamily = FontFamily(Font(R.font.roboto))) },
+            title = { Text("Exit app", fontFamily = FontFamily(Font(R.font.roboto))) },
             text = { Text("Are you sure you want to quit?", fontSize = 17.sp, fontFamily = FontFamily(Font(R.font.roboto)))},
             confirmButton = {
                 TextButton(onClick = {

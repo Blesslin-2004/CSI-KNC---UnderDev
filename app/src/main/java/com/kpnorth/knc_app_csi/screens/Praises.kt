@@ -1,5 +1,6 @@
 package com.kpnorth.knc_app_csi.screens
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -32,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.kpnorth.knc_app_csi.R
 import kotlinx.coroutines.tasks.await
 
+@Keep
 data class ThousandPraises(
     val praise: String = ""
 )

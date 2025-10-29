@@ -1,5 +1,6 @@
 package com.kpnorth.knc_app_csi.screens
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -40,6 +41,7 @@ import coil.compose.AsyncImage
 
 import com.kpnorth.knc_app_csi.R
 
+@Keep
 data class Announcement(
     val title: String = "",
     val date: String = "",

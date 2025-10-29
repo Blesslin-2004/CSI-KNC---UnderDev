@@ -112,7 +112,7 @@ fun Login1Screen(navController: NavController) {
                         .height(50.dp).padding(horizontal = 20.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 1.dp)
                 ) {
-                    Text("CHURCH MEMBER LOGIN", fontFamily = FontFamily(Font(R.font.roboto)))
+                    Text("CONTINUE AS CHURCH MEMBER", fontFamily = FontFamily(Font(R.font.roboto)))
                 }
 
                 Spacer(modifier = Modifier.height(15.dp))
@@ -239,8 +239,6 @@ fun Login1Screen(navController: NavController) {
                                                                 }
                                                             }
 
-                                                        val prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                                                        prefs.edit().putString("familyNumber", inputText).apply()
 
                                                     }
 
